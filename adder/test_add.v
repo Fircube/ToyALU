@@ -1,27 +1,27 @@
-/*
-    ans:
-    00000000000000000000000000000011
-*/
-
 `include "adder-carry.v"
 
-module top_module();
-    reg     [31:0]      in0;
-    reg     [31:0]      in1;
+module test_add;
+    reg     [31:0]      a;
+    reg     [31:0]      b;
     wire    [31:0]      sum;
 
+	reg	    [31:0]      res;
+    Add add(a, b, sum);
+    integer i;
     initial begin
-        assign in0 = 'b10;
-        assign in1 = 'b1;
-    end
+		for(i=1; i<=100; i=i+1) begin
+			a[31:0] = $random;
+			b[31:0] = $random;
+			res		= a + b;
+			
+			#1;
+			$display("TESTCASE %d: %d + %d = %d", i, a, b, sum);
 
-    Add a(
-        .a          (in0),
-        .b          (in1),
-        .sum        (sum)
-    );
-
-    always @(*) begin
-        $display("%b", sum);
-    end
+			if (sum !== res[31:0]) begin
+				$display("Wrong Answer!");
+			end
+		end
+		$display("Congratulations! You have passed all of the tests.");
+		$finish;
+	end
 endmodule
